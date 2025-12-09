@@ -1,10 +1,11 @@
-import { getDbUserId } from "@/actions/user.action";
+import { getDbUserId, syncUser } from "@/actions/user.action";
 import CreatePost from "@/components/CreatePost";
 import WhoToFollow from "@/components/WhoToFollow";
 import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
   const user = await currentUser();
+  await syncUser(); // Sync user with database first
   const dbUserId = await getDbUserId();
 
   return (
