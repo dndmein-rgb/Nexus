@@ -7,11 +7,10 @@ import { getDbUserId } from "./user.action";
 
 export async function getProfileByUsername(username: string) {
   try {
-    const user = await prisma.user.findFirst({
+    // Try exact match first
+    let user = await prisma.user.findFirst({
       where: { 
-        username: {
-          equals: username
-        }
+        username: username
       },
       include: {
         _count: {
@@ -23,6 +22,27 @@ export async function getProfileByUsername(username: string) {
         },
       },
     });
+    
+    // If exact match fails, try case-insensitive search
+    if (!user) {
+      user = await prisma.user.findFirst({
+        where: { 
+          username: {
+            equals: username,
+            mode: 'insensitive'
+          }
+        },
+        include: {
+          _count: {
+            select: {
+              followers: true,
+              following: true,
+              posts: true,
+            },
+          },
+        },
+      });
+    }
     
     return user;
   } catch (error) {

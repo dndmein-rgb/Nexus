@@ -86,25 +86,22 @@ function ProfilePageClient({
     }
   };
 
-  const isOwnProfile =
-    currentUser?.username === user.username ||
-    currentUser?.emailAddresses[0].emailAddress.split("@")[0] === user.username;
+  const isOwnProfile = currentUser?.username === user.username;
 
   const formattedDate = format(new Date(user.createdAt), "MMMM yyyy");
 
   return (
-    <div className="w-full">
-      <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 gap-8">
-        <div className="w-full max-w-3xl mx-auto">
-          <Card className="bg-card border-2 shadow-lg">
+    <div className="max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 gap-6">
+        <div className="w-full max-w-lg mx-auto">
+          <Card className="bg-card">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center text-center">
-                <Avatar className="w-32 h-32 border-4 border-primary/20">
+                <Avatar className="w-24 h-24">
                   <AvatarImage src={user.image ?? "/avatar.png"} />
                 </Avatar>
-                <h1 className="mt-6 text-3xl font-bold">{user.name ?? user.username}</h1>
-                <p className="text-lg text-muted-foreground">@{user.username}</p>
+                <h1 className="mt-4 text-2xl font-bold">{user.name ?? user.username}</h1>
+                <p className="text-muted-foreground">@{user.username}</p>
                 <p className="mt-2 text-sm">{user.bio}</p>
 
                 {/* PROFILE STATS */}
@@ -274,7 +271,6 @@ function ProfilePageClient({
             </div>
           </DialogContent>
         </Dialog>
-        </div>
       </div>
     </div>
   );

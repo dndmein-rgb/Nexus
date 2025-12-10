@@ -12,8 +12,25 @@ async function Sidebar() {
   const authUser = await currentUser();
   if (!authUser) return <UnAuthenticatedSidebar />;
 
+  console.log("Sidebar - Clerk User:", {
+    id: authUser.id,
+    username: authUser.username,
+    email: authUser.emailAddresses[0]?.emailAddress,
+    name: `${authUser.firstName} ${authUser.lastName}`
+  });
+
   const user = await getUserByClerkId(authUser.id);
-  if (!user) return null;
+  if (!user) {
+    console.log("Sidebar - No DB user found for Clerk ID:", authUser.id);
+    return null;
+  }
+
+  console.log("Sidebar - DB User:", {
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    email: user.email
+  });
 
   return (
     <div className="sticky top-20">
