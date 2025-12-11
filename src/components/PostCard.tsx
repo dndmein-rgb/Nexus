@@ -108,9 +108,21 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
           </div>
 
           {/* POST IMAGE */}
-          {post.image && (
-            <div className="rounded-lg overflow-hidden">
-              <img src={post.image} alt="Post content" className="w-full h-auto object-cover" />
+          {post.image && post.image.trim() && (
+            <div className="rounded-lg overflow-hidden bg-muted w-full">
+              <img 
+                src={post.image} 
+                alt="Post content" 
+                className="w-full h-auto object-cover max-w-full block"
+                loading="lazy"
+                onLoad={() => console.log("Image loaded:", post.image)}
+                onError={(e) => {
+                  console.error("Image failed to load from URL:", post.image);
+                  const img = e.target as HTMLImageElement;
+                  img.alt = "Image failed to load";
+                  img.style.display = "none";
+                }}
+              />
             </div>
           )}
 

@@ -26,14 +26,16 @@ function ImageUpload({ endpoint, onChange, value }: ImageUploadProps) {
       });
 
       if (!response.ok) {
-        throw new Error("Upload failed");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Upload failed");
       }
 
       const data = await response.json();
       onChange(data.url);
     } catch (error) {
-      console.error("Upload error:", error);
-      alert("Failed to upload image");
+      const errorMessage = error instanceof Error ? error.message : "Failed to upload image";
+      console.error("Upload error:", errorMessage);
+      alert(errorMessage);
     } finally {
       setIsUploading(false);
     }

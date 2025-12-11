@@ -98,7 +98,7 @@ function NotificationsPage() {
                         <div className="pl-6 space-y-2">
                           <div className="text-sm text-muted-foreground rounded-md p-2 bg-muted/30 mt-2">
                             <p>{notification.post.content}</p>
-                            {notification.post.image && (
+                            {notification.post.image && notification.post.image.trim() && (
                               <img
                                 src={notification.post.image}
                                 alt="Post content"

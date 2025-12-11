@@ -23,6 +23,7 @@ function CreatePost() {
 
     setIsPosting(true);
     try {
+      console.log("Creating post with image URL:", imageUrl);
       const result = await createPost(content, imageUrl);
       if (result?.success) {
         // reset the form

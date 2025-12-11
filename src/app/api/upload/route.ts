@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 
 export async function POST(request: NextRequest) {
@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
     const path = join(process.cwd(), "public", "uploads", filename);
 
     // Ensure uploads directory exists
-    const { mkdir } = await import("fs/promises");
     const uploadsDir = join(process.cwd(), "public", "uploads");
     try {
       await mkdir(uploadsDir, { recursive: true });
@@ -45,7 +44,8 @@ export async function POST(request: NextRequest) {
       message: "File uploaded successfully" 
     });
   } catch (error) {
-    console.error("Upload error:", error);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Upload error:", errorMessage);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
