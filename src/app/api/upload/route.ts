@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,31 +14,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Only image files are allowed" }, { status: 400 });
     }
 
-    // Validate file size (max 4MB)
-    if (file.size > 4 * 1024 * 1024) {
-      return NextResponse.json({ error: "File size too large" }, { status: 400 });
+    // Validate file size (max 5MB for base64)
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ error: "File size too large (max 1MB)" }, { status: 400 });
     }
 
+    // Convert file to base64
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    // Generate unique filename
-    const timestamp = Date.now();
-    const filename = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "")}`;
-    const path = join(process.cwd(), "public", "uploads", filename);
-
-    // Ensure uploads directory exists
-    const uploadsDir = join(process.cwd(), "public", "uploads");
-    try {
-      await mkdir(uploadsDir, { recursive: true });
-    } catch (error) {
-      // Directory might already exist
-    }
-
-    await writeFile(path, buffer);
+    const base64 = buffer.toString("base64");
+    const dataUrl = `data:${file.type};base64,${base64}`;
 
     return NextResponse.json({ 
-      url: `/uploads/${filename}`,
+      url: dataUrl,
       message: "File uploaded successfully" 
     });
   } catch (error) {
