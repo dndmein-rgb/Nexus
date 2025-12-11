@@ -39,10 +39,12 @@ interface ProfilePageClientProps {
   posts: Posts;
   likedPosts: Posts;
   isFollowing: boolean;
+  isOwnProfile: boolean;
 }
 
 function ProfilePageClient({
   isFollowing: initialIsFollowing,
+  isOwnProfile: initialIsOwnProfile,
   likedPosts,
   posts,
   user,
@@ -86,8 +88,6 @@ function ProfilePageClient({
     }
   };
 
-  const isOwnProfile = currentUser?.username === user.username;
-
   const formattedDate = format(new Date(user.createdAt), "MMMM yyyy");
 
   return (
@@ -129,7 +129,7 @@ function ProfilePageClient({
                   <SignInButton mode="modal">
                     <Button className="w-full mt-4">Follow</Button>
                   </SignInButton>
-                ) : isOwnProfile ? (
+                ) : initialIsOwnProfile ? (
                   <Button className="w-full mt-4" onClick={() => setShowEditDialog(true)}>
                     <EditIcon className="size-4 mr-2" />
                     Edit Profile
